@@ -1,0 +1,87 @@
+.landing-wrapper {
+  width: 100%;
+  height: 100vh;
+  background: #40a4c4;
+  background-image: url("https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-365736.jpg");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow: hidden;
+
+  @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+    height: 200vh;
+  }
+}
+
+.landing-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  background-color: rgba(196, 165, 64, 0.2);
+
+  @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+    height: 200vh;
+  }
+}
+
+.landing-content {
+  color: #ffffff;
+  text-shadow: 0px 3px 6px rgba(0, 0, 0, 1);
+  margin: auto;
+  cursor: default;
+
+  h1 {
+    font-size: 82px;
+    text-align: center;
+    margin-top: 20%;
+
+    @media screen and (max-width: 550px) {
+      font-size: 48px;
+    }
+  }
+
+  p {
+    font-size: 27px;
+    text-align: center;
+    font-weight: 400;
+
+    @media screen and (max-width: 550px) {
+      font-size: 16px;
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
+    margin: 10% auto;
+  }
+}
+
+.landing-content--see-more-button {
+  text-decoration: none;
+  display: block;
+  border: 1px solid #fff;
+  text-align: center;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  outline: none;
+  margin: auto;
+  margin-top: 25%;
+  transition: all 0.2s ease-in-out;
+  line-height: 50px;
+  width: 300px;
+  border-radius: 100px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  @media screen and (max-width: 550px) {
+    margin-top: 10%;
+    width: 200px;
+    font-size: 12px;
+  }
+}
