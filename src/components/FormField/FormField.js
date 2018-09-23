@@ -12,7 +12,7 @@ class FormField extends Component {
     const { onUpdate, onConditionChange } = this.props;
 
     if (e.target.name === "answerType")
-      onConditionChange(id, { [e.target.name]: e.target.value });
+      onConditionChange(id, { conditionValue: "Yes", [e.target.name]: e.target.value });
     else 
       onUpdate(id, { [e.target.name]: e.target.value });
   }

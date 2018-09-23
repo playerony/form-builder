@@ -1,11 +1,11 @@
 import inputTypes from "../config/inputTypes";
 
-function getNestedChildren(formFields, parentId) {
+function fetchNestedChildren(formFields, parentId) {
   let result = [];
 
   for (let i in formFields) {
     if (formFields[i].parentId === parentId) {
-      const children = getNestedChildren(formFields, formFields[i].id);
+      const children = fetchNestedChildren(formFields, formFields[i].id);
 
       if (children.length) formFields[i].children = children;
 
@@ -16,15 +16,17 @@ function getNestedChildren(formFields, parentId) {
   return result;
 }
 
-function getBaseFields(formFields = []) {
+function fetchMailFields(formFields) {
   return formFields.filter(formField => formField.inputType === inputTypes[0]);
 }
 
-export default formFields => {
-  const mainFields = getBaseFields(formFields);
+export default (formFields = []) => {
+  const mainFields = fetchMailFields(formFields);
 
   mainFields.map(mainField => {
-    mainField.children = getNestedChildren(formFields, mainField.id);
+    mainField.children = fetchNestedChildren(formFields, mainField.id);
+
+    return mainField;
   });
 
   return mainFields;

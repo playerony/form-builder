@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import FormField from "../FormField/FormField";
 
-import db from "../../config/db";
-import inputTypes from "../../config/inputTypes";
+import {
+  fetchFormFields,
+  fetchFormFieldByParentId,
+  insertFormField,
+  updateFormField,
+  deleteFormField
+} from "../../services/builderService";
+
 import formTypes from "../../config/formTypes";
-import getConditionsByFormType from "../../utils/getConditionsByFormType";
-import formFieldsToJSON from "../../utils/formFieldsToJSON";
 import "./Dashboard.scss";
 
 class Dashboard extends Component {
@@ -14,92 +18,49 @@ class Dashboard extends Component {
   };
 
   componentDidMount() {
-    this.fetchFormFields();
+    this.loadFormFields();
   }
 
-  async fetchFormFields() {
-    const formFields = await db.formFields.toArray();
-
-    this.setState({ formFields: formFieldsToJSON(formFields) });
+  async loadFormFields() {
+    this.setState({
+      formFields: await fetchFormFields()
+    });
   }
 
-  getConditionValue(parentAnswerType) {
-    const result = getConditionsByFormType(parentAnswerType);
+  handleAddNewFormField = async (inputType, parentId, parentAnswerType) => {
+    const result = await insertFormField(inputType, parentId, parentAnswerType);
 
-    return result ? result[0] : null;
-  }
-
-  handleAddNewFormField = async (
-    inputType = inputTypes[0],
-    parentId,
-    parentAnswerType
-  ) => {
-    const newFormField = {
-      inputType,
-      parentId,
-      answerType: formTypes[0].type,
-      condition: this.getConditionValue(parentAnswerType)
-    };
-
-    const id = await db.formFields.add(newFormField);
-
-    const newList = [
-      ...this.state.formFields,
-      Object.assign({}, newFormField, { id })
-    ];
-
-    this.setState({ formFields: newList });
+    if (result) await this.loadFormFields();
   };
 
   handleConditionChange = async (id, data) => {
-    const formField = await db.formFields.where({ parentId: id }).first({});
+    const formField = await fetchFormFieldByParentId(id);
 
-    await db.formFields.update(formField.id, {
+    await updateFormField(formField.id, {
       condition: formTypes[0].conditions[0],
       conditionValue: null
     });
-
-    console.log(formField.id)
 
     await this.handleUpdateFormField(id, data);
   };
 
   handleUpdateFormField = async (id, data) => {
-    await db.formFields.update(id, data);
-
-    await this.fetchFormFields();
+    await updateFormField(id, data);
+    await this.loadFormFields();
   };
 
   handleDeleteFormField = async id => {
-    let currentParentId = id;
-
-    while (1) {
-      const formField = await this.fetchFormFieldByParentId(currentParentId);
-
-      if (!formField) break;
-
-      currentParentId = formField.id;
-
-      db.formFields.delete(formField.id);
-    }
-
-    await db.formFields.delete(id);
-
-    await this.fetchFormFields();
+    await deleteFormField(id);
+    await this.loadFormFields();
   };
 
-  async fetchFormFieldByParentId(parentId) {
-    const result = await db.formFields.where({ parentId }).first({});
+  fetchNestedChildren(formFields = [], answerType, padding = 0) {
+    let result = [];
 
-    return result;
-  }
-
-  getNestedChildren(formFields, answerType, padding) {
-    let out = [];
     for (let i in formFields) {
       formFields[i].padding = padding;
 
-      out.push(
+      result.push(
         <FormField
           key={formFields[i].id}
           {...formFields[i]}
@@ -112,8 +73,8 @@ class Dashboard extends Component {
       );
 
       if (formFields[i].children) {
-        out.push(
-          this.getNestedChildren(
+        result.push(
+          this.fetchNestedChildren(
             formFields[i].children,
             formFields[i].answerType,
             padding + 1
@@ -122,19 +83,17 @@ class Dashboard extends Component {
       }
     }
 
-    return out;
+    return result;
   }
 
   renderContent() {
     const { formFields } = this.state;
 
     if (Object.keys(formFields).length > 0)
-      return this.getNestedChildren(formFields, formFields[0].answerType, 0);
+      return this.fetchNestedChildren(formFields, formFields[0].answerType);
   }
 
   render() {
-    console.log(this.state.formFields);
-
     return (
       <div className="dashboard-wrapper">
         <div className="dashboard-content">
