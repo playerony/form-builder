@@ -33,8 +33,9 @@ class FormField extends Component {
     return (
       <div className="form-field--form--field">
         <label className="form-field--form--field--label">Type</label>
+        
         <select
-          className="form-field--form--field--input"
+          className="form-field--form--field--select"
           name="answerType"
           onChange={e => this.onChange(e, id)}
         >

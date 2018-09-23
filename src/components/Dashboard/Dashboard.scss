@@ -1,6 +1,6 @@
 .dashboard-wrapper {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 40px);
 }
 
 .dashboard-content {
@@ -18,7 +18,7 @@
     font-weight: 500;
 
     & > span {
-      font-weight: 700;
+      color: #fff;
     }
 
     @media screen and (max-width: 550px) {
@@ -30,13 +30,13 @@
 .dashboard-content--see-more-button {
   text-decoration: none;
   display: block;
-  border: 1px solid #fff;
+  border: 2px solid #fff;
   text-align: center;
   font-size: 14px;
   background-color: rgba(0, 0, 0, 0);
   color: #fff;
   outline: none;
-  margin: 20px auto;
+  margin: 40px auto;
   transition: all 0.2s ease-in-out;
   line-height: 50px;
   width: 300px;
