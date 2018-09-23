@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FormField from "../FormField/FormField";
+import AnchorLink from "react-anchor-link-smooth-scroll";
 
 import {
   fetchFormFields,
@@ -97,7 +98,7 @@ class Dashboard extends Component {
 
   render() {
     return (
-      <div className="dashboard-wrapper">
+      <div className="dashboard-wrapper" id="dashboard">
         <div className="dashboard-content">
           <div className="dashboard-header">
             <h1>
@@ -114,6 +115,13 @@ class Dashboard extends Component {
           >
             Add Input
           </button>
+
+          <AnchorLink
+            className="dashboard-content--move-top-button"
+            href="#dashboard"
+          >
+            ^
+          </AnchorLink>
         </div>
       </div>
     );

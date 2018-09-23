@@ -12,6 +12,7 @@
   padding: 20px;
   text-align: center;
   color: #2d2d2d;
+  cursor: default;
 
   & > h1 {
     font-size: 60px;
@@ -51,6 +52,31 @@
     margin-top: 10%;
     width: 200px;
     font-size: 12px;
+  }
+}
+
+.dashboard-content--move-top-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+  text-decoration: none;
+  display: block;
+  border: 3px solid #fff;
+  text-align: center;
+  font-size: 40px;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  outline: none;
+  width: 75px;
+  height: 75px;
+  margin: 25px;
+  border-radius: 100px;
+  transition: all 0.3s ease-in-out;
+  line-height: 75px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
   }
 }
 
