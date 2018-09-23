@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { slideInLeft } from "react-animations";
+import { keyframes } from "styled-components";
+import Waypoint from "react-waypoint";
 
 import formTypes from "../../config/formTypes";
 import inputTypes from "../../config/inputTypes";
@@ -10,6 +13,10 @@ import getAnswersByFormType from "../../utils/getAnswersByFormType";
 import "./FormField.scss";
 
 class FormField extends Component {
+  state = {
+    animation: false
+  };
+
   onChange(e) {
     const { id, onUpdate, onConditionChange } = this.props;
 
@@ -138,47 +145,64 @@ class FormField extends Component {
     onDelete(id);
   };
 
+  handleContentAnimationChange = () => {
+    this.setState({
+      animation: true
+    });
+  };
+
   render() {
     const { question, padding } = this.props;
 
+    const slideInLeftAnimation = keyframes`${slideInLeft}`;
+
     return (
       <div className="form-field-wrapper">
-        <div
-          className="form-field-content"
-          style={{ paddingLeft: padding * 75 }}
-        >
-          <form className="form-field--form">
-            {this.renderConditionFields()}
+        <Waypoint onEnter={this.handleContentAnimationChange}>
+          <div
+            className="form-field-content"
+            style={{
+              paddingLeft: padding * 75,
+              animation: this.state.animation
+                ? `3s ${slideInLeftAnimation}`
+                : ``
+            }}
+          >
+            <form className="form-field--form">
+              {this.renderConditionFields()}
 
-            <div className="form-field--form--field">
-              <label className="form-field--form--field--label">Question</label>
+              <div className="form-field--form--field">
+                <label className="form-field--form--field--label">
+                  Question
+                </label>
+
+                <input
+                  type="text"
+                  name="question"
+                  className="form-field--form--field--input"
+                  value={question}
+                  onChange={e => this.onChange(e)}
+                />
+              </div>
+
+              {this.renderSelectTypeContent()}
 
               <input
-                type="text"
-                name="question"
-                className="form-field--form--field--input"
-                value={question}
-                onChange={e => this.onChange(e)}
+                type="submit"
+                value="Delete"
+                className="form-field--form--field--button"
+                onClick={this.handleOnDelete}
               />
-            </div>
 
-            {this.renderSelectTypeContent()}
-
-            <input
-              type="submit"
-              value="Delete"
-              className="form-field--form--field--button"
-              onClick={this.handleOnDelete}
-            />
-
-            <input
-              type="submit"
-              value="Add Sub-Input"
-              className="form-field--form--field--button"
-              onClick={this.handleOnInsert}
-            />
-          </form>
-        </div>
+              <input
+                type="submit"
+                value="Add Sub-Input"
+                className="form-field--form--field--button"
+                onClick={this.handleOnInsert}
+              />
+            </form>
+          </div>
+        </Waypoint>
       </div>
     );
   }
