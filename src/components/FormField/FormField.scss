@@ -26,7 +26,7 @@
 
 .form-field--form--field {
   display: block;
-  margin: 0px auto;
+  margin: auto;
   width: calc(100% - 10px);
   padding: 10px;
 
@@ -63,6 +63,10 @@
   border-bottom: 2px solid #515151;
 }
 
+.form-field--form--field--select {
+  width: calc(100% - 10px);
+}
+
 .form-field--form--field--button {
   display: block;
   padding: 10px;
@@ -71,12 +75,16 @@
   background-color: rgba(0, 0, 0, 0);
   color: #515151;
   outline: none;
-  margin: 30px auto;
-  transition: all 0.2s ease-in-out;
+  float: right;
+  transition: all 0.3s ease-in-out;
   cursor: pointer;
   border-radius: 100px;
-  float: right;
   margin: 10px;
+
+  @media screen and (max-width: 550px) {
+    float: none;
+    margin: 10px auto;
+  }
 }
 
 .form-field--form--field--button:hover {

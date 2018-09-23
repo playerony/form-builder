@@ -33,9 +33,9 @@ class FormField extends Component {
     return (
       <div className="form-field--form--field">
         <label className="form-field--form--field--label">Type</label>
-        
+
         <select
-          className="form-field--form--field--select"
+          className="form-field--form--field--input form-field--form--field--select"
           name="answerType"
           onChange={e => this.onChange(e, id)}
         >
@@ -63,7 +63,7 @@ class FormField extends Component {
     if (answers)
       return (
         <select
-          className="form-field--form--field--input"
+          className="form-field--form--field--input form-field--form--field--select"
           name="conditionValue"
           onChange={e => this.onChange(e, id)}
         >
@@ -103,7 +103,7 @@ class FormField extends Component {
           <label className="form-field--form--field--label">Condition</label>
 
           <select
-            className="form-field--form--field--input"
+            className="form-field--form--field--input form-field--form--field--select"
             name="condition"
             onChange={e => this.onChange(e, id)}
           >
