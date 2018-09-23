@@ -3,6 +3,8 @@ import FormField from "../FormField/FormField";
 
 import db from "../../config/db";
 import inputTypes from "../../config/inputTypes";
+import formTypes from "../../config/formTypes";
+import getConditionsByFormType from "../../utils/getConditionsByFormType";
 import formFieldsToJSON from "../../utils/formFieldsToJSON";
 import "./Dashboard.scss";
 
@@ -21,10 +23,22 @@ class Dashboard extends Component {
     this.setState({ formFields: formFieldsToJSON(formFields) });
   }
 
-  handleAddNewFormField = async (inputType = inputTypes[0], parentId) => {
+  getConditionValue(parentAnswerType) {
+    const result = getConditionsByFormType(parentAnswerType);
+
+    return result ? result[0] : null;
+  }
+
+  handleAddNewFormField = async (
+    inputType = inputTypes[0],
+    parentId,
+    parentAnswerType
+  ) => {
     const newFormField = {
       inputType,
-      parentId
+      parentId,
+      answerType: formTypes[0].type,
+      condition: this.getConditionValue(parentAnswerType)
     };
 
     const id = await db.formFields.add(newFormField);
@@ -37,10 +51,23 @@ class Dashboard extends Component {
     this.setState({ formFields: newList });
   };
 
+  handleConditionChange = async (id, data) => {
+    const formField = await db.formFields.where({ parentId: id }).first({});
+
+    await db.formFields.update(formField.id, {
+      condition: formTypes[0].conditions[0],
+      conditionValue: null
+    });
+
+    console.log(formField.id)
+
+    await this.handleUpdateFormField(id, data);
+  };
+
   handleUpdateFormField = async (id, data) => {
     await db.formFields.update(id, data);
 
-    this.fetchFormFields();
+    await this.fetchFormFields();
   };
 
   handleDeleteFormField = async id => {
@@ -58,7 +85,7 @@ class Dashboard extends Component {
 
     await db.formFields.delete(id);
 
-    this.fetchFormFields();
+    await this.fetchFormFields();
   };
 
   async fetchFormFieldByParentId(parentId) {
@@ -67,7 +94,7 @@ class Dashboard extends Component {
     return result;
   }
 
-  getNestedChildren(formFields, padding) {
+  getNestedChildren(formFields, answerType, padding) {
     let out = [];
     for (let i in formFields) {
       formFields[i].padding = padding;
@@ -76,14 +103,22 @@ class Dashboard extends Component {
         <FormField
           key={formFields[i].id}
           {...formFields[i]}
+          parentAnswerType={answerType}
           onInsert={this.handleAddNewFormField}
           onUpdate={this.handleUpdateFormField}
+          onConditionChange={this.handleConditionChange}
           onDelete={this.handleDeleteFormField}
         />
       );
 
       if (formFields[i].children) {
-        out.push(this.getNestedChildren(formFields[i].children, padding + 1));
+        out.push(
+          this.getNestedChildren(
+            formFields[i].children,
+            formFields[i].answerType,
+            padding + 1
+          )
+        );
       }
     }
 
@@ -91,10 +126,15 @@ class Dashboard extends Component {
   }
 
   renderContent() {
-    return this.getNestedChildren(this.state.formFields, 0);
+    const { formFields } = this.state;
+
+    if (Object.keys(formFields).length > 0)
+      return this.getNestedChildren(formFields, formFields[0].answerType, 0);
   }
 
   render() {
+    console.log(this.state.formFields);
+
     return (
       <div className="dashboard-wrapper">
         <div className="dashboard-content">
@@ -105,7 +145,10 @@ class Dashboard extends Component {
             </h1>
           </div>
           {this.renderContent()}
-          <button onClick={() => this.handleAddNewFormField()}>
+          <button
+            className="dashboard-content--see-more-button"
+            onClick={() => this.handleAddNewFormField()}
+          >
             Add Input
           </button>
         </div>
