@@ -1,0 +1,29 @@
+.dashboard-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: #40a4c4;
+}
+
+.dashboard-content {
+  width: 80%;
+  margin: 0px auto;
+}
+
+.dashboard-header {
+  padding: 20px;
+  text-align: center;
+  color: #2d2d2d;
+
+  & > h1 {
+    font-size: 60px;
+    font-weight: 500;
+
+    & > span {
+      font-weight: 700;
+    }
+
+    @media screen and (max-width: 550px) {
+      font-size: 40px;
+    }
+  }
+}
