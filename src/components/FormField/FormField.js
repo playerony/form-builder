@@ -1,20 +1,30 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import formTypes from "../../config/formTypes";
 import inputTypes from "../../config/inputTypes";
+
 import getConditionsByFormType from "../../utils/getConditionsByFormType";
 import getAnswersByFormType from "../../utils/getAnswersByFormType";
 
 import "./FormField.scss";
 
 class FormField extends Component {
-  onChange(e, id) {
-    const { onUpdate, onConditionChange } = this.props;
+  onChange(e) {
+    const { id, onUpdate, onConditionChange } = this.props;
 
-    if (e.target.name === "answerType")
-      onConditionChange(id, { conditionValue: "Yes", [e.target.name]: e.target.value });
-    else 
-      onUpdate(id, { [e.target.name]: e.target.value });
+    const data = { [e.target.name]: e.target.value };
+
+    const type = formTypes[2].type;
+    const typeAnswers = getAnswersByFormType(type);
+
+    if (e.target.name === "answerType") {
+      onConditionChange(id, data, {
+        conditionValue: e.target.value === type ? typeAnswers[0] : null
+      });
+    }
+
+    onUpdate(id, data);
   }
 
   renderSelectTypeContent() {
@@ -90,6 +100,7 @@ class FormField extends Component {
       return (
         <div className="form-field--form--field">
           <label className="form-field--form--field--label">Condition</label>
+
           <select
             className="form-field--form--field--input"
             name="condition"
@@ -107,21 +118,27 @@ class FormField extends Component {
               );
             })}
           </select>
+
           {this.renderConditionValueField()}
         </div>
       );
     }
   }
 
+  handleOnInsert = () => {
+    const { id, parentAnswerType, onInsert } = this.props;
+
+    onInsert(inputTypes[1], id, parentAnswerType);
+  };
+
+  handleOnDelete = () => {
+    const { id, onDelete } = this.props;
+
+    onDelete(id);
+  };
+
   render() {
-    const {
-      id,
-      question,
-      onInsert,
-      onDelete,
-      padding,
-      parentAnswerType
-    } = this.props;
+    const { question, padding } = this.props;
 
     return (
       <div className="form-field-wrapper">
@@ -131,28 +148,33 @@ class FormField extends Component {
         >
           <form className="form-field--form">
             {this.renderConditionFields()}
+
             <div className="form-field--form--field">
               <label className="form-field--form--field--label">Question</label>
+
               <input
                 type="text"
                 name="question"
                 className="form-field--form--field--input"
                 value={question}
-                onChange={e => this.onChange(e, id)}
+                onChange={e => this.onChange(e)}
               />
             </div>
+
             {this.renderSelectTypeContent()}
+
             <input
               type="submit"
               value="Delete"
               className="form-field--form--field--button"
-              onClick={() => onDelete(id)}
+              onClick={this.handleOnDelete}
             />
+
             <input
               type="submit"
               value="Add Sub-Input"
               className="form-field--form--field--button"
-              onClick={() => onInsert(inputTypes[1], id, parentAnswerType)}
+              onClick={this.handleOnInsert}
             />
           </form>
         </div>
@@ -160,5 +182,20 @@ class FormField extends Component {
     );
   }
 }
+
+FormField.propTypes = {
+  conditionValue: PropTypes.string,
+  question: PropTypes.string,
+  condition: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  padding: PropTypes.number.isRequired,
+  inputType: PropTypes.string.isRequired,
+  parentAnswerType: PropTypes.string.isRequired,
+  answerType: PropTypes.string.isRequired,
+  onInsert: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onConditionChange: PropTypes.func.isRequired
+};
 
 export default FormField;

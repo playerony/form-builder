@@ -10,6 +10,7 @@ import {
 } from "../../services/builderService";
 
 import formTypes from "../../config/formTypes";
+
 import "./Dashboard.scss";
 
 class Dashboard extends Component {
@@ -33,13 +34,14 @@ class Dashboard extends Component {
     if (result) await this.loadFormFields();
   };
 
-  handleConditionChange = async (id, data) => {
+  handleConditionChange = async (id, data, { conditionValue }) => {
     const formField = await fetchFormFieldByParentId(id);
 
-    await updateFormField(formField.id, {
-      condition: formTypes[0].conditions[0],
-      conditionValue: null
-    });
+    if (formField)
+      await updateFormField(formField.id, {
+        condition: formTypes[0].conditions[0],
+        conditionValue
+      });
 
     await this.handleUpdateFormField(id, data);
   };
@@ -103,7 +105,9 @@ class Dashboard extends Component {
               <span>Builder</span>
             </h1>
           </div>
+
           {this.renderContent()}
+
           <button
             className="dashboard-content--see-more-button"
             onClick={() => this.handleAddNewFormField()}
