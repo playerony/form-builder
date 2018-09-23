@@ -127,7 +127,7 @@ class FormField extends Component {
       <div className="form-field-wrapper">
         <div
           className="form-field-content"
-          style={{ paddingLeft: padding * 30 }}
+          style={{ paddingLeft: padding * 75 }}
         >
           <form className="form-field--form">
             {this.renderConditionFields()}

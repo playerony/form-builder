@@ -4,10 +4,16 @@
 }
 
 .form-field-content {
-  width: 400px;
+  width: 300px;
   height: 100%;
   display: flex;
   margin: 5px;
+
+  @media screen and (max-width: 550px) {
+    padding-left: 0px !important;
+    width: 200px;
+    margin: 5px auto;
+  }
 }
 
 .form-field--form {
@@ -42,7 +48,7 @@
 }
 
 .form-field--form--field--input {
-  height: 20px;
+  height: 30px;
   width: calc(100% - 20px);
   outline: none;
   font-size: 14px;
