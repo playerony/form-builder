@@ -7,8 +7,8 @@ import Waypoint from "react-waypoint";
 import formTypes from "../../config/formTypes";
 import inputTypes from "../../config/inputTypes";
 
-import getConditionsByFormType from "../../utils/getConditionsByFormType";
-import getAnswersByFormType from "../../utils/getAnswersByFormType";
+import fetchConditionsByFormType from "../../utils/fetchConditionsByFormType";
+import fetchAnswersByFormType from "../../utils/fetchAnswersByFormType";
 
 import "./FormField.scss";
 
@@ -23,13 +23,12 @@ class FormField extends Component {
     const data = { [e.target.name]: e.target.value };
 
     const type = formTypes[2].type;
-    const typeAnswers = getAnswersByFormType(type);
+    const typeAnswers = fetchAnswersByFormType(type);
 
-    if (e.target.name === "answerType") {
+    if (e.target.name === "answerType")
       onConditionChange(id, data, {
         conditionValue: e.target.value === type ? typeAnswers[0] : null
       });
-    }
 
     onUpdate(id, data);
   }
@@ -65,7 +64,7 @@ class FormField extends Component {
   renderConditionValueField() {
     const { id, conditionValue, parentAnswerType } = this.props;
 
-    const answers = getAnswersByFormType(parentAnswerType);
+    const answers = fetchAnswersByFormType(parentAnswerType);
 
     if (answers)
       return (
@@ -103,7 +102,7 @@ class FormField extends Component {
     const { id, inputType, condition, parentAnswerType } = this.props;
 
     if (inputType === inputTypes[1]) {
-      const conditions = getConditionsByFormType(parentAnswerType);
+      const conditions = fetchConditionsByFormType(parentAnswerType);
 
       return (
         <div className="form-field--form--field">
@@ -133,7 +132,9 @@ class FormField extends Component {
     }
   }
 
-  handleOnInsert = () => {
+  handleOnInsert = e => {
+    e.preventDefault();
+
     const { id, parentAnswerType, onInsert } = this.props;
 
     onInsert(inputTypes[1], id, parentAnswerType);

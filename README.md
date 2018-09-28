@@ -9,6 +9,7 @@ Requirements
 
 ### Installation:
 ```bash
+git clone
 npm install
 ```
 

@@ -3,7 +3,7 @@ import inputTypes from "../config/inputTypes";
 import formTypes from "../config/formTypes";
 
 import formFieldsToJSON from "../utils/formFieldsToJSON";
-import getConditionsByFormType from "../utils/getConditionsByFormType";
+import fetchConditionsByFormType from "../utils/fetchConditionsByFormType";
 
 export async function fetchFormFields() {
   const result = await await db.formFields.toArray();
@@ -20,14 +20,14 @@ export async function insertFormField(
     inputType,
     parentId,
     answerType: formTypes[0].type,
-    condition: getConditionValue(parentAnswerType)
+    condition: fetchConditionValue(parentAnswerType)
   };
 
   return await db.formFields.add(newFormField);
 }
 
-function getConditionValue(parentAnswerType) {
-  const result = getConditionsByFormType(parentAnswerType);
+function fetchConditionValue(parentAnswerType) {
+  const result = fetchConditionsByFormType(parentAnswerType);
 
   return result ? result[0] : null;
 }

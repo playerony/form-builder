@@ -9,7 +9,13 @@
   display: flex;
   margin: 10px;
 
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 720px) {
+    padding-left: 0px !important;
+    width: 250px;
+    margin: 10px auto;
+  }
+
+  @media screen and (max-width: 540px) {
     padding-left: 0px !important;
     width: 200px;
     margin: 5px auto;
@@ -30,7 +36,11 @@
   width: calc(100% - 10px);
   padding: 10px;
 
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 720px) {
+    padding: 7px;
+  }
+
+  @media screen and (max-width: 540px) {
     padding: 5px;
   }
 }
@@ -81,7 +91,7 @@
   border-radius: 100px;
   margin: 10px;
 
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 540px) {
     float: none;
     margin: 10px auto;
   }
